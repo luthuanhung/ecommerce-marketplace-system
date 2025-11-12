@@ -1,6 +1,12 @@
 import React, { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
-import { FaSearch, FaChevronDown, FaBars, FaTimes } from 'react-icons/fa';
+import { 
+        FaSearch, FaChevronDown, FaBars, FaTimes,
+    FaUser,         // Added for dropdown
+    FaCog,          // Added for dropdown
+    FaSignOutAlt,    // Added for dropdown
+    FaShoppingCart
+    } from 'react-icons/fa';
 // --- React Icons ---
 
 const SearchIcon = () => <FaSearch />;
@@ -28,6 +34,7 @@ const coordinatorHeaderList = [
 export default function Header() {
     const navItems = defaultHeaderList; // This can be modified to switch between different header lists
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [showUserMenu, setShowUserMenu] = useState(false);
 
     const linkClassName = ({ isActive }) =>
         `text-base font-bold uppercase tracking-wider hover:bg-secondary transition-colors px-3 py-2 rounded-md ${
@@ -86,7 +93,9 @@ export default function Header() {
                     </button>
 
                     {/* User Avatar */}
-                    <button className="shrink-0 cursor-pointer">
+                    <button className="shrink-0 cursor-pointer"
+                            onClick={() => setShowUserMenu(!showUserMenu)}
+                    >
                         <span className="sr-only">My Account</span>
                         <img
                         className="h-9 w-9 rounded-full object-cover ring-2 ring-white"
@@ -115,7 +124,7 @@ export default function Header() {
         {/* Shown only on small screens (md:hidden) and when isMobileMenuOpen is true */}
         <div 
             className={`
-                md:hidden absolute top-full left-0 w-full bg-red-800 shadow-lg px-4 pt-2 pb-4 space-y-4
+                md:hidden absolute top-full left-0 w-full bg-primary shadow-lg px-4 pt-2 pb-4 space-y-4
                 transition-all duration-300 ease-in-out z-10
                 ${isMobileMenuOpen 
                     ? 'opacity-100 translate-y-0 pointer-events-auto' 
@@ -156,7 +165,9 @@ export default function Header() {
                 </button>
 
                 {/* User Avatar */}
-                <button className="shrink-0 cursor-pointer flex items-center space-x-2">
+                <button className="shrink-0 cursor-pointer flex items-center space-x-2"
+                        onClick={() => setShowUserMenu(!showUserMenu)}
+                >
                     <img
                     className="h-9 w-9 rounded-full object-cover ring-2 ring-white"
                     src="https://placehold.co/40x40/E2E8F0/A0AEC0?text=User"
@@ -166,6 +177,58 @@ export default function Header() {
                 </button>
             </div>
         </div>
+        {showUserMenu && (
+            <div className="absolute right-4 mt-2 w-52 bg-white border border-gray-200 shadow-lg rounded-lg overflow-hidden z-50">
+                <ul className="py-1 text-sm text-gray-700">
+                    {/* Welcome message (Static) */}
+                    <li className="px-4 py-2 text-xs text-gray-500 border-b border-gray-100">
+                        Welcome, User!
+                    </li>
+                    
+                    {/* Placeholder Links */}
+                    <li>
+                        <Link
+                            to="/profile"
+                            onClick={() => setShowUserMenu(false)} // Close menu on click
+                            className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 w-full text-left"
+                        >
+                            <FaUser className="h-5 w-5" /> Profile
+                        </Link>
+                    </li>
+                    <li>
+                        <Link
+                            to="/settings" // Changed from /admin
+                            onClick={() => setShowUserMenu(false)} // Close menu on click
+                            className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 w-full text-left"
+                        >
+                            <FaCog className="h-5 w-5" /> Settings
+                        </Link>
+                    </li>
+                    <li>
+                        <Link
+                            to="/cart" // Changed from /admin
+                            onClick={() => setShowUserMenu(false)} // Close menu on click
+                            className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 w-full text-left"
+                        >
+                            <FaShoppingCart className="h-5 w-5" /> My Cart
+                        </Link>
+                    </li>
+
+                    {/* Logout button (Static) */}
+                    <li className="border-t border-gray-200 mt-1 pt-1">
+                        <button
+                            onClick={() => {
+                                // Add your logout logic here
+                                setShowUserMenu(false);
+                            }}
+                            className="flex items-center gap-2 px-4 py-2 hover:bg-red-50 w-full text-left text-red-600 hover:text-red-700"
+                        >
+                            <FaSignOutAlt className="h-5 w-5" /> Log Out
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        )}
     </header>
     );
 }

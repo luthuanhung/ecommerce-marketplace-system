@@ -28,7 +28,7 @@ export default function Footer() {
                     <div className="flex flex-col items-center md:items-start">
                         <h3 className="text-lg font-semibold mb-4 uppercase tracking-wider">About Program</h3>
                         <p className="text-sm text-cyan-100 leading-relaxed">
-                            Empowering students and tutors to connect, learn, and grow together. Find your perfect match today.
+                            The place that has everything for sale
                         </p>
                     </div>
 
@@ -74,7 +74,7 @@ export default function Footer() {
                 
                 {/* Optional: Copyright line at the bottom */}
                 <div className="border-t border-cyan-600 mt-10 pt-6 text-center text-sm text-cyan-200">
-                    © {new Date().getFullYear()} TutorConnect. All rights reserved.
+                    © {new Date().getFullYear()} BK-Bay. All rights reserved.
                 </div>
 
             </div>
