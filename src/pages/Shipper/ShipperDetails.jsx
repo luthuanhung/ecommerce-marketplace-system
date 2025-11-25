@@ -38,7 +38,7 @@ export default function ShipperDetails() {
         </div>
         <div className="p-4 bg-blue-100 rounded-lg">
           {/* COMPONENT CHANGE: Use FaTruck instead of TruckIcon */}
-          <FaTruck className="h-12 w-12 text-[var(--color-primary)]" />
+          <FaTruck className="h-12 w-12 text-primary" />
         </div>
       </div>
 
@@ -59,7 +59,7 @@ export default function ShipperDetails() {
               id="shipperId"
               value={shipperId}
               onChange={(e) => setShipperId(e.target.value)}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[var(--color-primary)] focus:border-[var(--color-primary)] sm:text-sm text-gray-900"
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm text-gray-900"
               placeholder="e.g., SHP001"
             />
           </div>
@@ -74,7 +74,7 @@ export default function ShipperDetails() {
               id="licensePlate"
               value={licensePlate}
               onChange={(e) => setLicensePlate(e.target.value)}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[var(--color-primary)] focus:border-[var(--color-primary)] sm:text-sm text-gray-900"
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm text-gray-900"
               placeholder="e.g., 51F-11345"
             />
           </div>
@@ -89,7 +89,7 @@ export default function ShipperDetails() {
               id="companyName"
               value={companyName}
               onChange={(e) => setCompanyName(e.target.value)}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[var(--color-primary)] focus:border-[var(--color-primary)] sm:text-sm text-gray-900"
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm text-gray-900"
               placeholder="e.g., Giaohangnhanh"
             />
           </div>
@@ -113,7 +113,7 @@ export default function ShipperDetails() {
           <button
             type="button"
             onClick={handleSave}
-            className="px-4 py-2 bg-[var(--color-primary)] border border-transparent rounded-md shadow-sm text-sm font-medium text-white hover:bg-[var(--color-secondary)] focus:outline-none"
+            className="px-4 py-2 bg-primary border border-transparent rounded-md shadow-sm text-sm font-medium text-white hover:bg-secondary focus:outline-none"
           >
             Save Shipper
           </button>

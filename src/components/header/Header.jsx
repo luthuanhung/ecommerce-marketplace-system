@@ -2,7 +2,7 @@
 
 // --- FIX 1: Add all missing imports ---
 import React, { useState, useEffect } from 'react'; 
-import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { Link, NavLink, useNavigate, useSearchParams } from 'react-router-dom';
 import { 
     FaSearch, FaChevronDown, FaBars, FaTimes,
     FaUser, FaCog, FaSignOutAlt, FaShoppingCart 
@@ -24,12 +24,15 @@ const navItems = [
 
 export default function Header() {
     const navigate = useNavigate();
+    const [searchParams, setSearchParams] = useSearchParams();
+  
     const [userAvatar, setUserAvatar] = useState(DEFAULT_AVATAR);
     const [currentUser, setCurrentUser] = useState(null);
     
     // --- FIX 3: Define missing state ---
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [showUserMenu, setShowUserMenu] = useState(false);
+    const [searchInput, setSearchInput] = useState(searchParams.get('search') || '');
 
     // --- FIX 4: Define missing link class function for mobile ---
     // This uses Tailwind classes. 'bg-secondary' must be defined in your index.css
@@ -59,7 +62,7 @@ export default function Header() {
         const fetchUser = async () => {
             try {
                 const userData = await getCurrentUser();
-                console.log('Current user data:', userData);
+                // console.log('Current user data:', userData);
                 if (!mounted) return;
                 if (userData && (userData.user || userData.data || userData)) {
                     const parsed = userData.user || userData.data || userData;
@@ -108,6 +111,25 @@ export default function Header() {
                         <img src={logoImage} alt="BK BAY Logo" className="h-20 w-20" /> {/* Use your logo */}
                         <span>BK BAY</span>
                     </Link>
+                </div>
+
+                {/* Search Bar (Desktop) */}
+                <div className="hidden md:flex flex-1 max-w-md mx-8">
+                    <div className="relative w-full">
+                        <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                        <input
+                            type="text"
+                            placeholder="Search products..."
+                            value={searchInput}
+                            onChange={(e) => setSearchInput(e.target.value)}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                    setSearchParams({ search: searchInput });
+                                }
+                            }}
+                            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                        />
+                    </div>
                 </div>
 
                 {/* Navigation Links (Desktop) */}
@@ -210,6 +232,26 @@ export default function Header() {
                     }
                 `}
             >
+                {/* Mobile Search Bar */}
+                <div className="w-full">
+                    <div className="relative">
+                        <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                        <input
+                            type="text"
+                            placeholder="Search products..."
+                            value={searchInput}
+                            onChange={(e) => setSearchInput(e.target.value)}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                    setSearchParams({ search: searchInput });
+                                    setIsMobileMenuOpen(false);
+                                }
+                            }}
+                            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                        />
+                    </div>
+                </div>
+
                 {/* Mobile Nav Links */}
                 <div className="flex flex-col space-y-2">
                     {navItems.map((item) => ( // Using the *new* consistent navItems

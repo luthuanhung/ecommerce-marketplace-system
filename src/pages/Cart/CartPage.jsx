@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { FiSearch, FiPlus, FiMinus, FiTrash2, FiMoreVertical } from 'react-icons/fi';
 
-import Header from '../components/header/Header';
-import Footer from '../components/footer/Footer';
-import OrderSummary from "../components/order/OrderSummary";
-import CartItem from "../components/cart/CartItem";
+import getCurrentUser from '../../services/userService';
+
+import Header from '../../components/header/Header';
+import Footer from '../../components/footer/Footer';
+import OrderSummary from "../../components/order/OrderSummary";
+import CartItem from "../../components/cart/CartItem";
 
 const initialCartItems = [
   {
