@@ -1,5 +1,4 @@
-
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, Navigate } from 'react-router-dom';
 import ProtectedRoute from './components/ProtectedRoute';
 import PublicRoute from './components/PublicRoute';
 import ShoppingCart from './pages/Cart/CartPage';
@@ -12,6 +11,10 @@ import Promotion from './pages/promotion/Promotion';
 import UserDetails from './pages/User/UserDetails';
 import LoginPage from './pages/Login/loginPage';
 import HomePage from './pages/Home/HomePage';
+import ProductReviews from './pages/Review/ProductReviews';
+import ProductListingPage from './pages/Products/ProductListingPage';
+import SellerDashboardPage from './pages/Seller/SellerDashboardPage';
+import AddProductPage from './pages/Seller/AddProductPage';
 
 function App() {
   return (
@@ -55,6 +58,28 @@ function App() {
           <SellerProductReport />
         </ProtectedRoute>
       } />
+      <Route path="/seller-dashboard" element={
+        <ProtectedRoute>
+          <SellerDashboardPage />
+        </ProtectedRoute>
+      } />
+      {/* Backwards-compatible aliases: some parts of the app/navigation use /seller/... paths */}
+      <Route path="/seller/seller-dashboard" element={
+        <ProtectedRoute>
+          <SellerDashboardPage />
+        </ProtectedRoute>
+      } />
+      <Route path="/seller" element={<Navigate to="/seller/seller-dashboard" replace />} />
+      <Route path="/add-product" element={
+        <ProtectedRoute>
+          <AddProductPage />
+        </ProtectedRoute>
+      } />
+      <Route path="/seller/add-product" element={
+        <ProtectedRoute>
+          <AddProductPage />
+        </ProtectedRoute>
+      } />
       <Route path="/promotion" element={
         <ProtectedRoute>
           <Promotion />
@@ -65,8 +90,19 @@ function App() {
           <UserDetails />
         </ProtectedRoute>
       } />
+      <Route path="/products" element={
+        <ProtectedRoute>
+          <ProductListingPage />
+        </ProtectedRoute>
+      } />
+      <Route path="/review" element={
+        <ProtectedRoute>
+        <ProductReviews />
+        </ProtectedRoute>
+      } />
     </Routes>
   );
 }
 
 export default App
+

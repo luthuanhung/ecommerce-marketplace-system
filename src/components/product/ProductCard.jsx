@@ -2,20 +2,21 @@
 import { useMemo } from "react"
 import { useNavigate } from "react-router-dom"
 
-function ProductCard({ product, modeRate=true, view }) {
-    const navigate = useNavigate();
-    // Calculate price after discount
-    const priceAsNumber = parseFloat(product.price_per_day); //price per day is a string, convert to number, original price
+const ProductCard = ({ product, onAddToCart }) => {
+  const navigate = useNavigate();
+  const priceAsNumber = parseFloat(product.price_per_day);
+  const finalPriceAsNumber = product.sale_percentage
+    ? priceAsNumber * (1 - product.sale_percentage / 100)
+    : priceAsNumber;
 
-    const finalPriceAsNumber = useMemo(() => {
-        if (!product.sale_percentage || product.sale_percentage <= 0)
-            return priceAsNumber; 
-        return priceAsNumber * (1 - product.sale_percentage / 100);
-    }, [product.sale_percentage, priceAsNumber]);
+  const handleCardClick = () => {
+    navigate(`/product/${product.product_id}`);
+  };
 
-    
-    const originalPriceDisplay = priceAsNumber.toFixed(2);
-    const finalPriceDisplay = finalPriceAsNumber.toFixed(2);
+  const handleAddToCartClick = (e) => {
+    e.stopPropagation(); // Prevent navigation when clicking the button
+    onAddToCart(product);
+  };
 
 
     const handleClick = () => {
