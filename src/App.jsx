@@ -7,6 +7,7 @@ import SellerProductReport from './pages/Seller/SellerProductReport';
 import LandingPage from './pages/Home/LandingPage';
 import Promotion from './pages/promotion/Promotion';
 import UserDetails from './pages/User/UserDetails';
+import ProductReviews from './pages/Review/ProductReviews';
 import LoginPage from './pages/Login/LoginPage';
 import ProductListingPage from './pages/Products/ProductListingPage';
 import SellerDashboardPage from './pages/Seller/SellerDashboardPage';
@@ -25,6 +26,9 @@ function App() {
         <ProtectedRoute>
           <LandingPage />
         </ProtectedRoute>} />
+      <Route path="/about" element=
+        {<h1>About Page</h1>
+      } />
       <Route path="/cart" element={
         <ProtectedRoute>
           <ShoppingCart />
@@ -75,6 +79,11 @@ function App() {
       <Route path="/products" element={
         <ProtectedRoute>
           <ProductListingPage />
+        </ProtectedRoute>
+      } />
+      <Route path="/review" element={
+        <ProtectedRoute>
+        <ProductReviews />
         </ProtectedRoute>
       } />
     </Routes>
