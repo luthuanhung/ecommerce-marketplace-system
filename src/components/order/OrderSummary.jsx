@@ -1,6 +1,7 @@
-
+import { useNavigate } from "react-router-dom";
 
 const OrderSummary = ({ subtotal }) => {
+  const navigate = useNavigate();
   const shipping = 10.00;
   const taxRate = 0.08; // 8%
   const tax = subtotal * taxRate;
@@ -32,7 +33,8 @@ const OrderSummary = ({ subtotal }) => {
         <span>${total.toFixed(2)}</span>
       </div>
       
-      <button className="w-full bg-primary text-white font-semibold py-3 rounded-lg hover:bg-secondary transition-colors">
+      <button className="w-full bg-primary text-white font-semibold py-3 rounded-lg hover:bg-secondary transition-colors"
+              onClick={() => navigate('/checkout')}>
         Proceed to Checkout
       </button>
     </div>

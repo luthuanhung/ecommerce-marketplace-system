@@ -1,94 +1,143 @@
-// File: D:/Ecommerce/src/pages/Home/HomePage.jsx
-
-import React from 'react';
 import Header from '../../components/header/Header';
 import Footer from '../../components/footer/Footer';
-import { useNavigate } from 'react-router-dom';
+import ProductList from '../../components/product/ProductList';
+import { useEffect, useState } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
-// Import your image correctly (adjust path if needed)
-import logoImage from '../../assets/logoBKBay.png'; // Corrected path assumption
-
-export default function HomePage() {
+const HomePage = () => {
     const navigate = useNavigate();
+    const [viewMode, setViewMode] = useState({
+        recommend: 'horizontal',
+        recent: 'horizontal'
+    });
+
+    const comments = [
+        {
+            rating: 4.5,
+            name: "Samantha D.",
+            verified: true,
+            comment: "I absolutely love this t-shirt! The design is unique and the fabric feels so comfortable. As a fellow designer, I appreciate the attention to detail. It's become my favorite go-to shirt.",
+            date: "August 14, 2023"
+        },
+        {
+            rating: 4,
+            name: "Alex M.",
+            verified: true,
+            comment: "The t-shirt exceeded my expectations! The colors are vibrant and the print quality is top-notch. Being a UI/UX designer myself, I'm quite picky about aesthetics, and this t-shirt definitely gets a thumbs up from me.",
+            date: "August 15, 2023"
+        },
+        {
+            rating: 3.5,
+            name: "Ethan R.",
+            verified: true,
+            comment: "This t-shirt is a must-have for anyone who appreciates good design. The minimalistic yet stylish pattern caught my eye, and the fit is perfect. I can see the designer's touch in every aspect of this shirt.",
+            date: "August 16, 2023"
+        },
+        {
+            rating: 4,
+            name: "Olivia P.",
+            verified: true,
+            comment: "As a UI/UX enthusiast, I value simplicity and functionality. This t-shirt not only represents those principles but also feels great to wear. It's evident that the designer poured their creativity into making this t-shirt stand out.",
+            date: "August 17, 2023"
+        },
+        {
+            rating: 4,
+            name: "Liam K.",
+            verified: true,
+            comment: "This t-shirt is a fusion of comfort and creativity. The fabric is soft, and the design speaks volumes about the designer's skill. It's like wearing a piece of art that reflects my passion for both design and fashion.",
+            date: "August 18, 2023"
+        },
+        {
+            rating: 4.5,
+            name: "Ava H.",
+            verified: true,
+            comment: "I'm not just wearing a t-shirt; I'm wearing a piece of design philosophy. The intricate details and thoughtful layout of the design make this shirt a conversation starter.",
+            date: "August 19, 2023"
+        }
+    ];
+
+    const [productList, setProductList] = useState([]);
+    // Get search params from URL
+    const [searchParams] = useSearchParams();
+    const searchQuery = searchParams.get('search') || '';
+
+    useEffect(() => {
+        const fetchProducts = async () => {
+            try {
+                const response = await fetch('api/products/', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log('PRODUCT DATA LIST:', data);
+                    setProductList(data.data.products);
+                } else {
+                    console.error('Failed to fetch products. Status:', response.status);
+                }
+            } catch (error) {
+                console.error('Error fetching products:', error);
+            }
+        }
+
+        fetchProducts();
+    }, []);
+
+    const filteredProducts = productList.filter(product => 
+        product.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+    const changeMode = (viewName) => {
+        setViewMode(prev => ({
+            ...prev,
+            [viewName]: prev[viewName] === 'horizontal' ? 'vertical' : 'horizontal'
+        }))
+    }
 
     return (
-        <div className="min-h-screen bg-gray-50 font-sans text-gray-800">
+        <div className="min-h-screen bg-gray-50">
             <Header />
+            
+            <main className="max-w-6xl mx-auto p-6">
 
-            <main>
-                {/* Hero Section */}
-                <section
-                    className="relative bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-border-primary)] text-white py-20 md:py-32 overflow-hidden"
-                >
-                    {/* Overlay for readability */}
-                    <div className="absolute inset-0 bg-black opacity-50"></div>
-                    
-                    {/* Content */}
-                    <div className="relative z-10 container mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-10">
-                        <div className="md:w-1/2 text-center md:text-left">
-                            <h1 className="text-4xl md:text-6xl font-extrabold leading-tight mb-4 animate-fade-in-up">
-                                Buy it, sell it, love it
-                            </h1>
-                            <p className="text-lg md:text-xl mb-8 opacity-90 animate-fade-in-up delay-200">
-                                Whatever it is, you can get it on BKBay
-                            </p>
-                            {/* Uncommented and modified buttons */}
-                            <div className="flex justify-center md:justify-start gap-4 animate-fade-in-up delay-400">
-                                <button 
-                                    onClick={() => navigate("/user")} // Navigate to User Details
-                                    className="px-8 py-3 bg-white text-[var(--color-primary)] font-bold rounded-full shadow-lg hover:bg-gray-100 transform hover:scale-105 transition duration-300"
-                                >
-                                    User
-                                </button>
-                                <button 
-                                    onClick={() => navigate("/shipper-details")} // Navigate to Shipper Details
-                                    className="px-8 py-3 bg-white text-[var(--color-primary)] font-bold rounded-full shadow-lg hover:bg-gray-100 transform hover:scale-105 transition duration-300"
-                                >
-                                    Manage Shipper
-                                </button>
-                                <button 
-                                    onClick={() => navigate("/review")} // Navigate to Seller Report
-                                    className="px-8 py-3 border-2 border-white text-white font-bold rounded-full shadow-lg hover:bg-white hover:text-[var(--color-primary)] transform hover:scale-105 transition duration-300"
-                                >
-                                    Review
-                                </button>
-                                <button 
-                                    onClick={() => navigate("/cart")} // Navigate to Shipper Details
-                                    className="px-8 py-3 bg-white text-[var(--color-primary)] font-bold rounded-full shadow-lg hover:bg-gray-100 transform hover:scale-105 transition duration-300"
-                                >
-                                    Cart
-                                </button>
-                                <button 
-                                    onClick={() => navigate("/promotion")} // Navigate to Shipper Details
-                                    className="px-8 py-3 bg-white text-[var(--color-primary)] font-bold rounded-full shadow-lg hover:bg-gray-100 transform hover:scale-105 transition duration-300"
-                                >
-                                    Promotion
-                                </button>
-                            </div>
-                        </div>
-                        
-                        {/* Image Placeholder */}
-                        <div className="md:w-1/2 flex justify-center md:justify-end mt-10 md:mt-0 animate-fade-in-right delay-600">
-                            {/* Corrected image path: use imported image directly */}
-                            <img 
-                                src={logoImage} 
-                                alt="Learning illustration" 
-                                className="rounded-lg object-cover max-w-full h-auto"
-                            />
-                        </div>
+                {/* Newest Products Section */}
+                <section className="mb-12">
+                    <h2 className="text-2xl md:text-3xl font-bold mb-6 text-black">Suggested Products</h2>
+                    <div className="bg-white rounded-lg shadow-md p-6">
+                        {filteredProducts.length === 0 ? (
+                            <p className="text-center text-gray-500 py-8">No available products found.</p>
+                        ) : 
+                            <ProductList View={viewMode.recommend} Products={filteredProducts} modeRate={false}/>
+                        }
+                    </div>
+                    <div className="flex justify-center mt-6">
+                        <button className="px-8 py-2 font-medium text-sm md:text-base text-black bg-white 
+                                rounded-full border-2 border-gray-300 shadow-sm
+                                hover:scale-105 transition-transform duration-300 ease-in-out"
+                                onClick={() => changeMode('recommend')}>
+                            {viewMode.recommend === 'horizontal' ? 'View All' : 'View Less'}
+                        </button>
                     </div>
                 </section>
 
-                {/* Call to Action Section (Kept as is for login) */}
-                <section className="bg-[var(--color-secondary)] py-20 text-white text-center">
-                    <div className="container mx-auto px-6">
-                        <h2 className="text-3xl md:text-5xl font-extrabold mb-6">Ready to join with us?</h2>
-                        <p className="text-xl opacity-90 mb-10">Buy thousands of items today.</p>
-                        <button 
-                            className="px-10 py-4 bg-white text-[var(--color-primary)] font-bold text-lg rounded-full shadow-lg 
-                                      hover:bg-gray-100 transform hover:scale-105 transition duration-300 cursor-pointer"
-                            onClick={() => navigate("/login")}> {/* This navigates to /login */}
-                            Sign Up Now
+                {/* Top-Selling Products Section */}
+                <section className="mb-12">
+                    <h2 className="text-2xl md:text-3xl font-bold mb-6 text-black">Top-Selling Product</h2>
+                    <div className="bg-white rounded-lg shadow-md p-6">
+                        {filteredProducts.length === 0 ? (
+                            <p className="text-center text-gray-500 py-8">No available products found.</p>
+                        ) : 
+                            <ProductList View={viewMode.recent} Products={filteredProducts} modeRate={false}/>
+                        }
+                    </div>
+                    <div className="flex justify-center mt-6">
+                        <button className="px-8 py-2 font-medium text-sm md:text-base text-black bg-white 
+                                rounded-full border-2 border-gray-300 shadow-sm
+                                hover:scale-105 transition-transform duration-300 ease-in-out"
+                                onClick={() => changeMode('recent')}>
+                            {viewMode.recent === 'horizontal' ? 'View All' : 'View Less'}
                         </button>
                     </div>
                 </section>
@@ -96,5 +145,7 @@ export default function HomePage() {
 
             <Footer />
         </div>
-    );
+    )
 }
+
+export default HomePage;

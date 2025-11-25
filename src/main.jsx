@@ -3,14 +3,15 @@ import { createRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 import './index.css'
 import App from './App.jsx'
+import { SearchProvider } from './contexts/SearchContext'
 import { CartProvider } from './context/CartContext.jsx'
 
 createRoot(document.getElementById('root')).render(
   // <StrictMode>
     <BrowserRouter>
-      <CartProvider>
+      <SearchProvider>
         <App />
-      </CartProvider>
+      </SearchProvider>
     </BrowserRouter>
   // {/* </StrictMode>, */}
 )
