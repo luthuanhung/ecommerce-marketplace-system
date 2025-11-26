@@ -5,7 +5,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, NavLink, useNavigate, useSearchParams } from 'react-router-dom';
 import { 
     FaSearch, FaChevronDown, FaBars, FaTimes,
-    FaUser, FaCog, FaSignOutAlt, FaShoppingCart 
+    FaUser, FaCog, FaSignOutAlt, FaShoppingCart,FaStar
 } from 'react-icons/fa';
 import logoImage from '../../assets/logoBKBay.png'; // Assuming this path is correct
 import getCurrentUser from '../../services/userService'; // If needed for user data
@@ -170,6 +170,26 @@ export default function Header() {
                                         <FaShoppingCart className="h-5 w-5" /> My Cart
                                     </Link>
                                 </li>
+                                <li>
+                                    <Link
+                                        to="/write-review"
+                                        onClick={() => setShowUserMenu(false)}
+                                        className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 w-full text-left"
+                                    >
+                                        {/* <FaShoppingCart className="h-5 w-5" /> My Cart {cartItemCount > 0 && `(${cartItemCount})`} */}
+                                        <FaStar className="h-5 w-5" /> Write Review
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link
+                                        to="/review"
+                                        onClick={() => setShowUserMenu(false)}
+                                        className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 w-full text-left"
+                                    >
+                                        {/* <FaShoppingCart className="h-5 w-5" /> My Cart {cartItemCount > 0 && `(${cartItemCount})`} */}
+                                        <FaStar className="h-5 w-5" /> Review
+                                    </Link>
+                                </li>
                                 <li className="border-t border-gray-200 mt-1 pt-1">
                                     <button
                                         onClick={() => {
@@ -257,6 +277,20 @@ export default function Header() {
                         className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 w-full text-left"
                     >
                         <FaShoppingCart className="h-5 w-5" /> My Cart
+                    </Link>
+                    <Link
+                        to="/write-review"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 w-full text-left"
+                    >
+                        <FaStar className="h-5 w-5" /> Write Review
+                    </Link>
+                    <Link
+                        to="/write-review"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 w-full text-left"
+                    >
+                        <FaStar className="h-5 w-5" /> Review
                     </Link>
                     <button
                         onClick={() => {
