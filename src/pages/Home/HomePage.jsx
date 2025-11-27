@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import Header from '../../components/header/Header';
 import Footer from '../../components/footer/Footer';
+import ProductReviews from '../../components/product/ProductReviews';
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -40,8 +41,12 @@ const HomePage = () => {
       setError(null);
       try {
         let url = '/api/products/all';
-        if (query) url = `/api/products/search?name=${encodeURIComponent(query)}`;
-        else if (selectedCategory) url = `/api/products/categories?category=${encodeURIComponent(selectedCategory)}`;
+        if (query) {
+            url = `/api/products/search?name=${encodeURIComponent(query)}`;
+        } else if (selectedCategory) {
+            // --- FIX: Change this line to match the new backend route ---
+            url = `/api/products/category/${encodeURIComponent(selectedCategory)}`;
+        }
 
         const res = await fetch(url, { signal: controller.signal });
         if (!res.ok) throw new Error(`Status ${res.status}`);
@@ -188,4 +193,3 @@ const HomePage = () => {
 };
 
 export default HomePage;
-// ...existing code...

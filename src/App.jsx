@@ -17,6 +17,7 @@ import AddProductPage from './pages/Seller/AddProductPage';
 import ProfilePage from './pages/Login/ProfilePage';
 import WriteReview from './pages/Review/WriteReview';
 import LoginPage from './pages/Login/LoginPage';
+import ProductListingPage from './pages/Products/ProductListingPage';
 
 function App() {
   return (

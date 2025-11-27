@@ -2,6 +2,7 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import Header from '../../components/header/Header';
 import Footer from '../../components/footer/Footer';
+import ProductReviews from '../../components/product/ProductReviews'; // Ensure this is imported
 
 const ProductListingPage = () => {
     const { barcode } = useParams();
@@ -14,7 +15,6 @@ const ProductListingPage = () => {
     const [qty, setQty] = useState(1);
     const [selectedVariant, setSelectedVariant] = useState(null); 
     
-    // NEW STATE FOR CART FEEDBACK
     const [isAddingToCart, setIsAddingToCart] = useState(false);
     const [cartError, setCartError] = useState(null);
 
@@ -23,15 +23,12 @@ const ProductListingPage = () => {
         return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ' đ';
     };
 
-    // --- Stock Calculation Logic ---
     const availableStock = useMemo(() => {
         return selectedVariant?.stock ?? 0;
     }, [selectedVariant]);
 
-    // Function to handle quantity change, enforcing the stock limit
     const handleQtyChange = (newQty) => {
         const stockLimit = availableStock;
-        
         if (newQty < 1) {
             setQty(1);
         } else if (newQty > stockLimit) {
@@ -41,50 +38,33 @@ const ProductListingPage = () => {
         }
     };
 
-    // --- NEW: Handle Add to Cart API Call ---
     const handleAddToCart = async () => {
         setCartError(null);
-        
         if (!selectedVariant) {
             setCartError("Please select a product variant before adding to cart.");
             return;
         }
-
-        // Check stock one last time
         if (qty < 1 || qty > availableStock) {
             setCartError(`Invalid quantity. Must be between 1 and ${availableStock}.`);
             return;
         }
-
         setIsAddingToCart(true);
-
         const cartData = {
             barcode: barcode,
             variationName: selectedVariant.name,
             quantity: qty
         };
-
         try {
-            // NOTE: Update the URL path if your router is different from '/api/cart'
             const res = await fetch('/api/cart', { 
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    // ** CRITICAL: Add Authorization header if your route uses verifyToken **
-                    // 'Authorization': `Bearer ${localStorage.getItem('userToken')}`, 
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(cartData),
             });
-
             const result = await res.json();
-
             if (!res.ok || !result.success) {
-                // Throw an error with the detailed message from the backend
                 throw new Error(result.message || `Failed to add item. Status: ${res.status}`);
             }
-
             alert(`✅ ${result.message || 'Item added to cart successfully!'}`);
-            
         } catch (err) {
             console.error("Cart API Error:", err);
             setCartError(err.message);
@@ -92,54 +72,35 @@ const ProductListingPage = () => {
             setIsAddingToCart(false);
         }
     };
-    // ---------------------------------------------
-
 
     useEffect(() => {
         if (!barcode) return;
-        
         const controller = new AbortController();
-        
         const load = async () => {
             setLoading(true);
             setError(null);
-            
             try {
                 const res = await fetch(`/api/products/${encodeURIComponent(barcode)}`, { signal: controller.signal });
-                
                 if (res.status === 404) {
                     setProduct(null); 
                     setError('Product not found (HTTP 404)');
                     return;
                 }
-                
                 if (!res.ok) throw new Error(`Status ${res.status}`);
-                
                 const data = await res.json();
-                
-                const { 
-                    product: rawProduct,
-                    images: rawImages, 
-                    variations: rawVariations,
-                } = data;
-                
+                const { product: rawProduct, images: rawImages, variations: rawVariations } = data;
                 const finalProduct = rawProduct || data;
-                
                 if (!finalProduct || !finalProduct.name) {
                     setError('Product data is empty or missing name.');
                     return;
                 }
-
                 setProduct(finalProduct);
                 setImages(rawImages || []);
                 setVariations(rawVariations || []);
                 setSelectedImageIdx(0);
-                
                 const initialVariant = (rawVariations && rawVariations.length > 0) ? rawVariations[0] : null;
                 setSelectedVariant(initialVariant);
-                
                 setQty(1); 
-
             } catch (err) {
                 if (err.name !== 'AbortError') {
                     console.error(err);
@@ -149,12 +110,10 @@ const ProductListingPage = () => {
                 setLoading(false);
             }
         };
-
         load();
         return () => controller.abort();
     }, [barcode]);
 
-    // --- Price Calculation Logic ---
     let finalDisplayPrice;
     const priceRange = product?.priceRange;
     const isMultipleVariants = variations.length > 1;
@@ -169,7 +128,6 @@ const ProductListingPage = () => {
     } else {
         finalDisplayPrice = formatPrice(product?.price);
     }
-    // ---------------------------------
     
     if (loading) {
         return (
@@ -210,7 +168,6 @@ const ProductListingPage = () => {
                                 <div className="text-gray-400">No image</div>
                             )}
                         </div>
-
                         {images.length > 0 && (
                             <div className="mt-4 flex gap-3 overflow-x-auto">
                                 {images.map((src, i) => (
@@ -246,13 +203,11 @@ const ProductListingPage = () => {
 
                         <div className="text-sm text-gray-700 mb-6">{product.description || 'No description available.'}</div>
                         
-                        {/* Display Cart API Error Feedback */}
                         {cartError && (
                             <div className="text-sm text-red-600 mb-3 p-2 border border-red-200 bg-red-50 rounded">
                                 Error adding to cart: {cartError}
                             </div>
                         )}
-
 
                         {variations.length > 0 && (
                             <div className="mb-4">
@@ -288,9 +243,7 @@ const ProductListingPage = () => {
                                 >
                                     -
                                 </button>
-                                <div className="px-4">
-                                    {qty}
-                                </div>
+                                <div className="px-4">{qty}</div>
                                 <button
                                     onClick={() => handleQtyChange(qty + 1)}
                                     className="px-3 py-2"
@@ -299,17 +252,14 @@ const ProductListingPage = () => {
                                     +
                                 </button>
                             </div>
-
-                            <div className="text-sm text-gray-500">
-                                {availableStock} pieces available
-                            </div>
+                            <div className="text-sm text-gray-500">{availableStock} pieces available</div>
                         </div>
 
                         <div className="flex gap-4">
                             <button 
-                                onClick={handleAddToCart} // ATTACH HANDLER HERE
+                                onClick={handleAddToCart} 
                                 className="flex-1 bg-white border border-red-600 text-red-600 py-3 rounded-md hover:bg-red-50"
-                                disabled={isAddingToCart || qty > availableStock || availableStock === 0} // DISABLE WHILE ADDING
+                                disabled={isAddingToCart || qty > availableStock || availableStock === 0}
                             >
                                 {isAddingToCart ? 'Adding...' : 'Add to cart'}
                             </button>
@@ -327,6 +277,12 @@ const ProductListingPage = () => {
                         </div>
                     </div>
                 </div>
+
+                {/* --- NEW SECTION: Product Reviews (Moved OUT of the grid) --- */}
+                <div className="mt-10">
+                    <ProductReviews productId={barcode} />
+                </div>
+
             </main>
             <Footer />
         </>
