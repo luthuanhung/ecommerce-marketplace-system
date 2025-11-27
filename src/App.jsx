@@ -17,7 +17,10 @@ import AddProductPage from './pages/Seller/AddProductPage';
 import ProfilePage from './pages/Login/ProfilePage';
 import WriteReview from './pages/Review/WriteReview';
 import LoginPage from './pages/Login/LoginPage';
+import ProductListingPage from './pages/Products/ProductListingPage';
+import BuyerOrdersPage from './pages/Buyer/BuyerOrdersPage';
 
+import OrderDashboardPage from './pages/Seller/OrderDashboardPage';
 function App() {
   return (
     <Routes>
@@ -84,11 +87,24 @@ function App() {
 
       <Route path="/seller" element={<Navigate to="/seller/seller-dashboard" replace />} />
 
+      <Route path="/seller/orders" element={
+        <ProtectedRoute>
+          <OrderDashboardPage />
+        </ProtectedRoute>
+      } />
+
       <Route path="/seller/add-product" element={
         <ProtectedRoute>
           <AddProductPage />
         </ProtectedRoute>
       } />
+
+      
+    {/* <Route path="/seller/orders" element={
+        <ProtectedRoute>
+          <OrderDashboardPage />
+        </ProtectedRoute>
+      } /> */}
 
       <Route path="/promotion" element={
         <ProtectedRoute>
@@ -106,7 +122,18 @@ function App() {
           <ProfilePage />
         </ProtectedRoute>
       } />
-      {/* <Route path="/products" element={
+
+      <Route path="/buyer/orders" element={
+        <ProtectedRoute>
+          <BuyerOrdersPage />
+        </ProtectedRoute>
+      } />
+      
+      <Route path="/product/:barcode" element={
+        <ProtectedRoute>
+          <ProductListingPage />
+        </ProtectedRoute>
+      } />
 
       {/* Reviews Routes */}
       <Route path="/product/:productId/reviews" element={
