@@ -135,11 +135,40 @@ export async function getAllProducts() {
     return [];
 }
 
+export async function sendReply(reviewId, content) {
+    const res = await fetch(`/api/reviews/${encodeURIComponent(reviewId)}/reply`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ content }),
+    });
+    const out = await handleResponse(res);
+    if (!out.ok) throw new Error(out.body?.message || 'Failed to reply');
+    
+    const r = out.body.data || {}; 
+    const username = r.username || r.Username || 'Me';
+
+    // [MỚI] Tạo một chuỗi ngẫu nhiên
+    const randomSeed = Date.now().toString() + Math.random().toString();
+
+    return {
+        id: Date.now(),
+        username: username,
+        content: r.content || r.Content,
+        date: r.date || r.Date || r.Time || new Date().toISOString(),
+        
+        // [SỬA] Thay username bằng randomSeed
+        // Kết quả: Mỗi lần reply sẽ ra một màu và ký tự đại diện khác nhau hoàn toàn
+        avatar: r.avatar || `https://api.dicebear.com/7.x/initials/svg?seed=${randomSeed}`
+    };
+}
+
 export default {
   getReviews,
   createReview,
   markHelpful,
   upsertReaction,
   getPurchasesForReview,
-  getAllProducts, // Export thêm hàm này
+  getAllProducts,
+  sendReply,
 };
