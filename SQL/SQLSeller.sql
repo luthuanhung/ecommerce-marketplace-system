@@ -8,7 +8,7 @@ CREATE OR ALTER PROCEDURE sp_Seller_AddProduct
     @Manufacturing_date DATE,
     @Expired_date DATE,
     @SellerID VARCHAR(100),
-    @Status VARCHAR(20) = 'Active'
+  
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -49,46 +49,11 @@ END;
 GO
 
 
-% -------------- REMOVE PRODUCT --------------
-CREATE OR ALTER PROCEDURE sp_Seller_DeleteProduct
-    @Bar_code VARCHAR(100),
-    @SellerID VARCHAR(100)
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-    -- 1. Validation: Ownership Check
-    IF NOT EXISTS (SELECT 1 FROM Product_SKU WHERE Bar_code = @Bar_code AND sellerID = @SellerID)
-    BEGIN
-        RAISERROR('Error: You do not have permission to delete this product.', 16, 1);
-        RETURN;
-    END
-
-    -- 2. Validation: Check for Pending Orders (Optional, if strict)
-    -- If there are active orders, we might block even a soft delete
-    -- (This logic depends on your specific business rules)
-
-    -- 3. Soft Delete Logic
-    BEGIN TRY
-        UPDATE Product_SKU
-        SET Status = 'Deleted'
-        WHERE Bar_code = @Bar_code;
-        
-        PRINT 'Success: Product removed from catalog.';
-    END TRY
-    BEGIN CATCH
-        RAISERROR('Error: Could not delete product.', 16, 1);
-    END CATCH
-END;
-GO
-
-
 % -------------- UPDATE PRODUCT --------------
 CREATE OR ALTER PROCEDURE sp_Seller_UpdateProduct
     @Bar_code VARCHAR(100),
     @Name VARCHAR(100),
     @Description TEXT,
-    @Status VARCHAR(20)
 AS
 BEGIN
     SET NOCOUNT ON;
